@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// The Circuit function, which interacts with the potenitally failing service.
+// The Circuit function, which interacts with the potentially failing service.
 type Circuit func(context.Context) (string, error)
 
 // Breaker function, A closure with same function signature as Circuit. It adds extra error handling
