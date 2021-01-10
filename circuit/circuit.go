@@ -11,7 +11,7 @@ import (
 type Circuit func(context.Context) (string, error)
 
 // New constructor to create the circuit function.
-// Returns an anonymouse function which fails intermittently.
+// Returns an anonymous function which fails intermittently.
 // Failure condition is randomized. 
 func New() (func(context.Context)(string,error)){
     return func(ctx context.Context) (string, error) {
