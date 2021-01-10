@@ -1,3 +1,4 @@
+// Example of fanout pattern.
 package main
 
 import (
@@ -6,6 +7,8 @@ import (
 	"time"
 )
 
+// Funnel takes multiple sources, and streamlines there final results on to 
+// a single destination.
 func funnel(sources ...<-chan int) <-chan int {
 	dest := make(chan int)
 
