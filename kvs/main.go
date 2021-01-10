@@ -55,20 +55,20 @@ func keyValueGetHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(value))
 }
 
-func keyValueDeleteHandler(w http.ResponseWriter, r *http.Request){
-    vars := mux.Vars(r)
-    key := vars["key"]
+func keyValueDeleteHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	key := vars["key"]
 
-    err := api.Delete(key)
+	err := api.Delete(key)
 
-    if err != nil {
+	if err != nil {
 		http.Error(w,
 			err.Error(),
 			http.StatusInternalServerError)
 		return
 	}
 
-    w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusOK)
 }
 
 func main() {
@@ -80,9 +80,9 @@ func main() {
 
 	// Register keyValueGetHandler as the handler function for GET
 	// requests matching "/v1/{key}"
-    r.HandleFunc("/v1/{key}", keyValueGetHandler).Methods("GET")
-    
-    // Register keyValueGetHandler as the handler function for DELETE
+	r.HandleFunc("/v1/{key}", keyValueGetHandler).Methods("GET")
+
+	// Register keyValueGetHandler as the handler function for DELETE
 	// requests matching "/v1/{key}"
 	r.HandleFunc("/v1/{key}", keyValueDeleteHandler).Methods("DELETE")
 
