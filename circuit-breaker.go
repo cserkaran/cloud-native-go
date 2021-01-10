@@ -5,17 +5,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"math/rand"
+	"github.com/cloud-native-go/circuit"
 	"time"
 )
 
-// The Circuit function, which interacts with the potentially failing service.
-type Circuit func(context.Context) (string, error)
-
 // Breaker function, A closure with same function signature as Circuit. It adds extra error handling
-// logic to the Circuit function, also adds exponential back off in case service 
+// logic to the Circuit function, also adds exponential back off in case service
 // is continuosly failing.
-func Breaker(circuit Circuit, failureThreshold uint64) Circuit {
+func Breaker(circuit circuit.Circuit, failureThreshold uint64) circuit.Circuit {
 
 	var lastStateSuccessul = true
 	var consecutiveFailures uint64 = 0
@@ -52,18 +49,9 @@ func Breaker(circuit Circuit, failureThreshold uint64) Circuit {
 
 func main() {
 
-	circuit := func(ctx context.Context) (string, error) {
-		time.Sleep(3 * time.Second)
-		random := rand.Intn(100)
-		if random%3 == 0 {
-			return "success", nil
-		}
-		return "", errors.New("error calling circuit logic")
-
-	}
-
+	ckt := circuit.New()
 	ctx := context.Background()
-	breaker := Breaker(circuit, 4)
+	breaker := Breaker(ckt, 4)
 	for {
 
 		res, err := breaker(ctx)
