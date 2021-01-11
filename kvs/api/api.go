@@ -9,8 +9,8 @@ import (
 
 var store = struct {
 	sync.RWMutex
-	m map[string]interface{}
-}{m: make(map[string]interface{})}
+	m map[string]string
+}{m: make(map[string]string)}
 
 // Put the value into the key.
 func Put(key, value string) error {
@@ -25,7 +25,7 @@ var ErrorNoSuchKey = errors.New("no such key")
 
 // Get the value for a key. Returns empty string and error in case
 // key does not exist.
-func Get(key string) (interface{}, error) {
+func Get(key string) (string, error) {
 	store.RLock()
 	value, ok := store.m[key]
 	store.RUnlock()
