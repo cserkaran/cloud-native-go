@@ -22,7 +22,7 @@ func Retry(effector Effector, retries int, delay time.Duration) Effector {
 				return response, err
 			}
 
-			log.Printf("Attemp %d failed; retrying in %v", r+1, delay)
+			log.Printf("Attempt %d failed; retrying in %v", r+1, delay)
 
 			select {
 			case <-time.After(delay):
