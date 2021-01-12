@@ -63,7 +63,8 @@ func (l *FileTransactionLogger) Run(){
     }()
 }
 
-func (l *FileTransactionLogger) ReadEvents() (<-chan Event, <-chan error) {{
+// ReadEvents reads from transaction logs  and replays the event into the store
+func (l *FileTransactionLogger) ReadEvents() (<-chan Event, <-chan error) {
     scanner := bufio.NewScanner(l.file)  // Create a Scanner for l.file.
     outEvent := make(chan Event) // An unbuffered events channel.
     outError := make(chan error,1) // A buffered errors channel.
@@ -78,7 +79,7 @@ func (l *FileTransactionLogger) ReadEvents() (<-chan Event, <-chan error) {{
             line := scanner.Text()
 
             fmt.Sscanf(
-                line, "%d\t%d\t%d\t%d\t",
+                line, "%d\t%d\t%s\t%s\t",
                 &e.Sequence, &e.EventType, &e.Key, &e.Value)
 
             // Sanity check! Are the sequence numbers in increasing order?

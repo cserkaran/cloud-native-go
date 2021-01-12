@@ -24,10 +24,12 @@ func initializeTransactionLog() error {
 	events, errors := transact.ReadEvents()
 	ok, e := true, logger.Event{}
 
-	for ok && err != nil {
+	for ok && err == nil {
+
 		select {
-		case err, _ = <-errors:
+		case err, ok = <-errors:
 		case e, ok = <-events:
+			
 			switch e.EventType {
 			case logger.EventDelete:
 				err = api.Delete(e.Key)
@@ -68,6 +70,8 @@ func keyValuePutHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	transact.WritePut(key, string(value))
+
 	w.WriteHeader(http.StatusCreated)
 }
 
@@ -86,8 +90,6 @@ func keyValueGetHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	transact.WritePut(key, value)
-
 	w.Write([]byte(value))
 }
 
@@ -104,7 +106,7 @@ func keyValueDeleteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	transact.WriteDelete(key, value)
+	transact.WriteDelete(key)
 
 	w.WriteHeader(http.StatusOK)
 }
