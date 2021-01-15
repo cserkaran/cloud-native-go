@@ -16,7 +16,12 @@ var transact logger.TransactionLogger
 func initializeTransactionLog() error {
 	var err error
 
-	transact, err = logger.NewFileTransactionLogger("transaction.log")
+	postgresDbParams := logger.PostgresDbParams{
+		DbName: "postgres", Host: "localhost"}
+
+	// transact, err = logger.NewFileTransactionLogger("transaction.log")
+	transact, err = logger.NewPostgreTransactionLogger(postgresDbParams)
+
 	if err != nil {
 		return fmt.Errorf("failed to create event logger: %w", err)
 	}
@@ -29,7 +34,7 @@ func initializeTransactionLog() error {
 		select {
 		case err, ok = <-errors:
 		case e, ok = <-events:
-			
+
 			switch e.EventType {
 			case logger.EventDelete:
 				err = api.Delete(e.Key)
@@ -113,7 +118,11 @@ func keyValueDeleteHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
-	initializeTransactionLog()
+	err := initializeTransactionLog()
+
+	if err != nil{
+		log.Fatal(err)
+	}
 
 	r := mux.NewRouter()
 

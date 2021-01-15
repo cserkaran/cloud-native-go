@@ -63,7 +63,7 @@ func (l *FileTransactionLogger) Run(){
     }()
 }
 
-// ReadEvents reads from transaction logs  and replays the event into the store
+// ReadEvents reads from file transaction logs  and replays the event into the store.
 func (l *FileTransactionLogger) ReadEvents() (<-chan Event, <-chan error) {
     scanner := bufio.NewScanner(l.file)  // Create a Scanner for l.file.
     outEvent := make(chan Event) // An unbuffered events channel.
