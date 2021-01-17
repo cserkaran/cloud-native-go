@@ -9,8 +9,9 @@ import (
 
 // PostgresDbParams parameters required for Postgres Database connection.
 type PostgresDbParams struct {
-	DbName   string
-	Host     string
+	DbName string
+	Host   string
+	User   string
 }
 
 // PostgresTransactionLogger defines the Database transaction logger.
@@ -23,9 +24,9 @@ type PostgresTransactionLogger struct {
 // NewPostgreTransactionLogger creates a new Database transaction logger.
 func NewPostgreTransactionLogger(config PostgresDbParams) (TransactionLogger, error) {
 
-	connStr := fmt.Sprintf("host=%s dbname=%s sslmode=disable",
-        config.Host, config.DbName)
-        
+	connStr := fmt.Sprintf("host=%s dbname=%s user=%s sslmode=disable",
+		config.Host, config.DbName,config.User)
+
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		return nil, fmt.Errorf("failed to created db value :%w", err)
@@ -50,7 +51,7 @@ func NewPostgreTransactionLogger(config PostgresDbParams) (TransactionLogger, er
 		}
 	}
 
-    fmt.Println("transaction logger created successfully")
+	fmt.Println("transaction logger created successfully")
 	return tl, nil
 
 }

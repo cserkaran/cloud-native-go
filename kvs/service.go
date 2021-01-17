@@ -17,13 +17,13 @@ func initializeTransactionLog() error {
 	var err error
 
 	postgresDbParams := logger.PostgresDbParams{
-		DbName: "postgres", Host: "localhost"}
+		DbName: "postgres", Host: "host.docker.internal", User: "postgres"}
 
 	// transact, err = logger.NewFileTransactionLogger("transaction.log")
 	transact, err = logger.NewPostgreTransactionLogger(postgresDbParams)
 
 	if err != nil {
-		return fmt.Errorf("failed to create event logger: %w", err)
+		return fmt.Errorf("failed to create transaction logger: %w", err)
 	}
 
 	events, errors := transact.ReadEvents()
@@ -120,7 +120,7 @@ func main() {
 
 	err := initializeTransactionLog()
 
-	if err != nil{
+	if err != nil {
 		log.Fatal(err)
 	}
 

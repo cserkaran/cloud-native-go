@@ -1,0 +1,1 @@
+docker run --detach --publish 8080:8080 --add-host=postgres:192.168.0.166 kvs
